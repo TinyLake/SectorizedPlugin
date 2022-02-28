@@ -51,14 +51,14 @@ public class SectorizedMapGenerator implements Cons<Tiles> {
             threshold = 0.87f;
         }});
         ores.each(GenerateFilter::randomize);
-        Simplex simplex1 = new Simplex(Mathf.random(100_000));
-        Simplex simplex2 = new Simplex(Mathf.random(100_000));
+        int seed1 = Mathf.random(100_000),
+            seed2 = Mathf.random(100_000);
         GenerateFilter.GenerateInput in = new GenerateFilter.GenerateInput();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                int temp = Mathf.clamp((int) ((simplex1.octaveNoise2D(12, 0.55, 1.0 / 200, x, y) - 0.5) * 10 * blocks.length), 0, blocks.length - 1);
-                int elev = Mathf.clamp((int) ((simplex2.octaveNoise2D(12, 0.6, 1.0 / 300, x, y)) * blocks[0].length), 0, blocks[0].length - 1);
+                int temp = Mathf.clamp((int) ((Simplex.noise2d(seed1, 12, 0.55, 1.0 / 200, x, y) - 0.5) * 10 * blocks.length), 0, blocks.length - 1);
+                int elev = Mathf.clamp((int) ((Simplex.noise2d(seed2, 12, 0.6, 1.0 / 300, x, y)) * blocks[0].length), 0, blocks[0].length - 1);
 
                 Block floor = floors[temp][elev];
                 Block wall = Blocks.air;
