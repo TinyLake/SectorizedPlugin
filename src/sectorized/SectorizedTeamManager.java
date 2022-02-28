@@ -64,17 +64,17 @@ public class SectorizedTeamManager {
         });
 
         if (!sectorizedTeam.forceKilled)
-            Call.sendMessage("[red]\u26A0 [white]Team of player " + sectorizedTeam.leaderName + " [white]has been eliminated!");
+            Call.sendMessage("[red]\u26A0 [white]玩家 " + sectorizedTeam.leaderName + " [white]被完全摧毁了!");
 
         teamSectorizedTeamMap.remove(team.id);
 
         if (teamSectorizedTeamMap.size() <= 1) {
             if (teamSectorizedTeamMap.size() == 1) {
-                Call.infoMessage("[red]GAME OVER[white] \n\n" +
-                        "Team of player " + uuidSectorizedTeamMap.values().iterator().next().players.get(0).name() + "[white] won");
+                Call.infoMessage("[red]游戏结束[white] \n\n" +
+                        "玩家 " + uuidSectorizedTeamMap.values().iterator().next().players.get(0).name() + "[white] 取得了本场游戏的胜利！");
             } else {
-                Call.infoMessage("[red]GAME OVER[white] \n\n" +
-                        "All teams died");
+                Call.infoMessage("[red]游戏结束[white] \n\n" +
+                        "所有玩家阵亡");
             }
 
             Timer.schedule(() -> {

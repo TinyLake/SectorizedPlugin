@@ -61,7 +61,7 @@ public class SectorizedCoreCost {
     public static String getRequirementsText(Team team) {
         int cores = SectorizedTeamManager.getTeam(team).cores - 1;
 
-        String requirementsText = "Requirements for next Core: \n";
+        String requirementsText = "下个核心造价: \n";
 
         for (ItemStack itemStack : requirements[cores]) {
             int availableItems = team.items().get(itemStack.item);

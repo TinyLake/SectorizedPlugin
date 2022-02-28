@@ -84,7 +84,7 @@ public class SectorizedPlugin extends Plugin {
                             if (!SectorManager.validPlace(action.player.team(), wx, wy)) {
                                 int id = action.player.id;
                                 if (!cannotBuildHereCooldown.contains(id)) {
-                                    action.player.sendMessage("[red]\u26A0 [white]You cannot build outside your sector. To expand your sector place a [pink]vault [white]within the borders of your sector!");
+                                    action.player.sendMessage("[red]\u26A0 [white]你不能在你的领地外建造！请在领地范围内建造一个[pink]仓库[white]来拓展你的领地。");
                                     cannotBuildHereCooldown.add(id);
                                     Timer.schedule(() -> cannotBuildHereCooldown.remove(Integer.valueOf(id)), 5);
                                 }
@@ -108,7 +108,7 @@ public class SectorizedPlugin extends Plugin {
                             if (SectorizedCoreCost.consumeIfHas(action.player.team())) {
                                 SectorManager.assignArea(action.player.team(), (CoreBlock) Blocks.coreShard, action.tile.x, action.tile.y, false);
                             } else {
-                                action.player.sendMessage("[red]\u26A0 [white]Insufficient resources for a new core");
+                                action.player.sendMessage("[red]\u26A0 [white]缺少资源转换成新核心！");
                                 action.tile.setNet(Blocks.air);
                             }
                             return false;
@@ -137,13 +137,13 @@ public class SectorizedPlugin extends Plugin {
             }
 
             if (interval.get(1, 60 * 60 * 5)) {
-                Call.sendMessage("[gold]\uE837 [white]Type [teal]/info [white]for information about the gamemode.\n" +
-                        "And join our discord! \n" +
+                Call.sendMessage("[gold]\uE837 [white]输入 [teal]/info [white]查看本模式介绍.\n" +
+                        "欢迎加入本模式的discord! \n" +
                         "[blue]\uE80D [lightgray]https://discord.gg/AmdMXKkS9Q[white]");
 
                 for (NetConnection netConnection : net.getConnections()) {
                     if (netConnection.player.team() == Team.derelict) {
-                        netConnection.player.sendMessage("[gold]\uE837 [white]Try rejoining the game, there might be a new spawning spot available!");
+                        netConnection.player.sendMessage("[gold]\uE837 [white]请尝试重新加入游戏，可为你找到一个新的重生点!");
                     }
                 }
             }
@@ -176,14 +176,15 @@ public class SectorizedPlugin extends Plugin {
         Events.on(EventType.PlayerJoin.class, event -> {
             if (!active() || event.player.team() == Team.derelict) return;
 
-            Call.infoMessage(event.player.con, "[cyan]Welcome to\n [#9C4F96]S[#FF6355]E[#FBA949]C[#FAE442]T[#8BD448]O[#2AA8F2]R[#01D93F]I[#F0EC00]Z[#FF8B00]E[#DB2B28]D[white] \n\n" +
-                    "[gold]\uE87C How it works \uE87C[white]\n" +
-                    "You can only build within the bounds of your teams sector, highlighted by shock mines.\n" +
-                    "Expand your sector by placing vaults, you can see the expansion costs on the info popup.\n" +
-                    "Kill all other teams to win and be aware of the crux team.\n\n" +
+            Call.infoMessage(event.player.con, "[cyan]欢迎来到\n [#9C4F96]S[#FF6355]E[#FBA949]C[#FAE442]T[#8BD448]O[#2AA8F2]R[#01D93F]I[#F0EC00]Z[#FF8B00]E[#DB2B28]D[white] \n\n" +
+                    "[#9C4F96]领[#FBA949]域[#8BD448]战[#01D93F]争[#FF8B00]模[#DB2B28]式[white] \n\n" +
+                    "[gold]\uE87C 游戏规则 \uE87C[white]\n" +
+                    "你只能在你队伍的领域内建造建筑，领域边界由[cyan]脉冲地雷[white]进行了标识\n" +
+                    "放置仓库来转换成核心以拓展你的领域，转换核心的价格随着已有核心的数量而增加.\n" +
+                    "消灭所有其他队伍取得胜利！同时也要小心红队的出怪\n\n" +
                     "[red]\u26A0 ALPHA \u26A0[white]\n" +
-                    "Please report any bugs you encounter on the discord server, the plugin is still under development!\n" +
-                    "Have fun playing :)\n\n" +
+                    "如果游玩过程中出现bug或者有建议与意见，欢迎来到discord或者wz群反馈!\n" +
+                    "玩的开心 :)\n\n" +
                     "[yellow]\uE80D https://discord.gg/AmdMXKkS9Q[white]");
 
             if (state.serverPaused) state.serverPaused = false;
@@ -191,7 +192,7 @@ public class SectorizedPlugin extends Plugin {
             if (SectorizedTeamManager.isDead(event.player)) {
                 event.player.team(Team.derelict);
                 event.player.unit().kill();
-                event.player.sendMessage("[gold]\uE837 [white]Your base was recently destroyed this game, reconnect 5 minutes after you got eliminated to get a new spawning spot!");
+                event.player.sendMessage("[gold]\uE837 [white]你的核心已被摧毁，请耐心等待5分钟以重新加入游戏!");
                 return;
             }
 
@@ -209,7 +210,7 @@ public class SectorizedPlugin extends Plugin {
 
                 SectorManager.assignArea(team, (CoreBlock) Blocks.coreNucleus, spawn.x, spawn.y, true);
             } else {
-                event.player.sendMessage("[gold]\uE837 [white]No spawn available, please wait for the next game or rejoin when new spawning spots are available again!");
+                event.player.sendMessage("[gold]\uE837 [white]没有可行的重生点!请等待新重生点出现，或者等待下一场游戏开始!");
                 event.player.team(Team.derelict);
             }
         });
@@ -230,7 +231,7 @@ public class SectorizedPlugin extends Plugin {
                     }
 
                     if (sectorizedTeam.cores > 1)
-                        Call.sendMessage("[red]\u26A0 [white]Team of player " + sectorizedTeam.leaderName + " [white]was eliminated due to inactivity!");
+                        Call.sendMessage("[red]\u26A0 [white]玩家 " + sectorizedTeam.leaderName + " [white]由于挂机被系统摧毁!");
                     SectorizedTeamManager.forceKillTeam(event.player.team());
                 }, 30 * sectorizedTeam.cores);
             }
@@ -276,22 +277,22 @@ public class SectorizedPlugin extends Plugin {
             int min = (int) (elapsedTime / 60 / 60);
             int sec = (int) (elapsedTime / 60 % 60);
 
-            player.sendMessage("[gold]\uE837 [white]Elapsed time: " + min + "m " + sec + "s");
+            player.sendMessage("[gold]\uE837 [white]本局游戏时间: " + min + "m " + sec + "s");
         });
 
         handler.<Player>register("state", "Display the state of your team.", (args, player) -> {
             if (!active()) return;
             if (SectorizedTeamManager.hasTeam(player) && !SectorizedTeamManager.isDead(player)) {
-                player.sendMessage("[gold]\uE837 [white]Team state: " + SectorizedTeamManager.getTeam(player).cores + " cores, " + SectorizedTeamManager.getTeam(player).tilesCaptured + " tiles");
+                player.sendMessage("[gold]\uE837 [white]队伍状态--核心数：" + SectorizedTeamManager.getTeam(player).cores + ", 地块数：" + SectorizedTeamManager.getTeam(player).tilesCaptured + "");
             } else {
-                player.sendMessage("[gold]\uE837 [white]You currently don´t have a team!");
+                player.sendMessage("[gold]\uE837 [white]你现在没有加入任何队伍!");
             }
         });
 
         handler.<Player>register("info", "Display information about the gamemode.", (args, player) -> {
             if (!active()) return;
-            player.sendMessage("[gold]\uE837 [white]To expand your sector place a [pink]vault [white]where you want a new core to be placed!\n" +
-                    "Kill all other teams to win, but also be aware of the crux team attacking you!");
+            player.sendMessage("[gold]\uE837 [white]放置仓库来转换成核心以拓展你的领域，转换核心的价格随着已有核心的数量而增加.\n" +
+                    "消灭所有其他队伍取得胜利！同时也要小心红队的出怪!");
         });
 
         handler.<Player>register("discord", "Display the discord link.", (args, player) -> {
