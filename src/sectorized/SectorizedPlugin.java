@@ -137,10 +137,6 @@ public class SectorizedPlugin extends Plugin {
             }
 
             if (interval.get(1, 60 * 60 * 5)) {
-                Call.sendMessage("[gold]\uE837 [white]输入 [teal]/info [white]查看本模式介绍.\n" +
-                        "欢迎加入本模式的discord! \n" +
-                        "[blue]\uE80D [lightgray]https://discord.gg/AmdMXKkS9Q[white]");
-
                 for (NetConnection netConnection : net.getConnections()) {
                     if (netConnection.player.team() == Team.derelict) {
                         netConnection.player.sendMessage("[gold]\uE837 [white]请尝试重新加入游戏，可为你找到一个新的重生点!");
@@ -183,7 +179,7 @@ public class SectorizedPlugin extends Plugin {
                     "放置仓库来转换成核心以拓展你的领域，转换核心的价格随着已有核心的数量而增加.\n" +
                     "消灭所有其他队伍取得胜利！同时也要小心红队的出怪\n\n" +
                     "[red]\u26A0 ALPHA \u26A0[white]\n" +
-                    "如果游玩过程中出现bug或者有建议与意见，欢迎来到discord或者wz群反馈!\n" +
+                    "如果游玩过程中出现bug或者有建议与意见，欢迎去原作者discord反馈!\n" +
                     "玩的开心 :)\n\n" +
                     "[yellow]\uE80D https://discord.gg/AmdMXKkS9Q[white]");
 
@@ -210,7 +206,7 @@ public class SectorizedPlugin extends Plugin {
 
                 SectorManager.assignArea(team, (CoreBlock) Blocks.coreNucleus, spawn.x, spawn.y, true);
             } else {
-                event.player.sendMessage("[gold]\uE837 [white]没有可行的重生点!请等待新重生点出现，或者等待下一场游戏开始!");
+                event.player.sendMessage("[gold]\uE837 [white]没有可行的重生点!请耐心等待新重生点出现，或者等待下一场游戏开始!");
                 event.player.team(Team.derelict);
             }
         });
@@ -295,9 +291,9 @@ public class SectorizedPlugin extends Plugin {
                     "消灭所有其他队伍取得胜利！同时也要小心红队的出怪!");
         });
 
-        handler.<Player>register("discord", "Display the discord link.", (args, player) -> {
+        handler.<Player>register("about", "Display the discord link.", (args, player) -> {
             if (!active()) return;
-            player.sendMessage("[blue]\uE80D [lightgray]https://discord.gg/AmdMXKkS9Q[white]");
+            player.sendMessage("[blue]\uE80D [lightgray]https://discord.gg/AmdMXKkS9Q[white]\n 汉化 by lc");
         });
     }
 
